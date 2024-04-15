@@ -1,2 +1,190 @@
 # farel-bench
-Testing LLM reasoning abilities with family relationship quizzes.
+This project is a family relationship (FaRel) benchmark for testing LLM reasoning abilities with family relationship quizzes.
+
+## Results
+
+The table below presents the FaRel-3 (family relationships of degree up to 3) benchmark results for selected large language models.
+The benchmark result is the macro-averaged accuracy value over all the family relationship classes.
+
+|    | Model                           |   FaRel-3 |   child |   parent |   grandchild |   sibling |   grandparent |   great grandchild |   niece or nephew |   aunt or uncle |   great grandparent |
+|---:|:--------------------------------|--------:|--------:|---------:|-------------:|----------:|--------------:|-------------------:|------------------:|----------------:|--------------------:|
+|  0 | c4ai-command-r-plus-v01.Q8_0    |   63.11 |  100.00 |   100.00 |        96.00 |     22.00 |         72.00 |              46.00 |             46.00 |           18.00 |               68.00 |
+|  1 | mixtral-8x7b-instruct-v0.1.Q8_0 |   62.00 |   98.00 |    96.00 |        78.00 |     24.00 |         96.00 |              50.00 |             34.00 |            8.00 |               74.00 |
+|  2 | Karasu-Mixtral-8x22B-v0.1.Q8_0  |   61.56 |  100.00 |   100.00 |        94.00 |     20.00 |         88.00 |              40.00 |             26.00 |           18.00 |               68.00 |
+|  3 | qwen1_5-72b-chat-q8_0           |   57.56 |  100.00 |   100.00 |        90.00 |     14.00 |         76.00 |              46.00 |             28.00 |           32.00 |               32.00 |
+|  4 | qwen1_5-32b-chat-q8_0           |   56.67 |  100.00 |    94.00 |        82.00 |     16.00 |         94.00 |              18.00 |             46.00 |           12.00 |               48.00 |
+|  5 | c4ai-command-r-v01-Q8_0         |   55.78 |  100.00 |   100.00 |        76.00 |      4.00 |         92.00 |              18.00 |             20.00 |           46.00 |               46.00 |
+|  6 | llama-2-70b-chat.Q8_0           |   55.78 |  100.00 |    92.00 |        72.00 |     14.00 |         80.00 |              52.00 |             28.00 |           10.00 |               54.00 |
+|  7 | miqu-1-70b.q5_K_M               |   54.89 |  100.00 |   100.00 |        50.00 |     66.00 |         64.00 |              16.00 |             40.00 |           30.00 |               28.00 |
+|  8 | ggml-dbrx-instruct-16x12b-q8_0  |   54.44 |  100.00 |   100.00 |        58.00 |     34.00 |         70.00 |              12.00 |             46.00 |           20.00 |               50.00 |
+|  9 | mistral-7b-instruct-v0.2.Q8_0   |   46.89 |   98.00 |    86.00 |        42.00 |     24.00 |         70.00 |              12.00 |             56.00 |           28.00 |                6.00 |
+| 10 | gemma-7b-it-Q8_0                |   43.56 |  100.00 |    54.00 |        62.00 |     32.00 |         36.00 |              28.00 |             50.00 |           18.00 |               12.00 |
+| 11 | llama-2-13b-chat.Q8_0           |   43.33 |   88.00 |    82.00 |        32.00 |     22.00 |         76.00 |               6.00 |             42.00 |           30.00 |               12.00 |
+| 12 | llama-2-7b-chat.Q8_0            |   31.56 |   36.00 |    72.00 |        34.00 |     24.00 |         28.00 |              22.00 |             22.00 |           30.00 |               16.00 |
+| 13 | gemma-2b-it-Q8_0                |    5.56 |    0.00 |     0.00 |         0.00 |      0.00 |          0.00 |              12.00 |             24.00 |           14.00 |                0.00 |
+| 14 | qwen1_5-7b-chat-q8_0            |    2.89 |    6.00 |     2.00 |         4.00 |      0.00 |          2.00 |               0.00 |              8.00 |            2.00 |                2.00 |
+
+Very low benchmark results for gemma-2b and qwen1_5-7b are caused by the inability of the models to mark the selected answer option as specified in the prompt.
+
+## Description
+The purpose of this project is to test LLM reasoning abilities with family relationship quizzes.
+Why use family relationships?
+* Family relationships are commonly known concepts.
+* They allow to create quizzes of scalable difficulty by increasing the relationship degree.
+* Easy randomization of the quizzes by changing the names of family members and the order of listed relations.
+
+### Basic assumptions
+
+Consider the following graph of family relationships:
+![family relationships](https://i.postimg.cc/2jWvPB2w/family-relations.png)
+
+We can observe that:
+* child and parent relationships have distance 1 from self,
+* grandchild, grandparent, and sibling relationships have distance 2 from self,
+* great grandchild, niece or nephew, aunt or uncle, and great grandparent relationships have distance 3 from self,
+and so on.
+
+We use such relationship graphs to programmatically generate family quizzes. 
+Generated quizzes have the following properties:
+* Connections between family members are specified by using only the parental relationship.
+* Family member connections specify a graph of all family relationships of degree up to N.
+* The quiz question is to differentiate between family relationships of degree N.
+* LLM is instructed to select the i-th quiz answer option by enclosing the selected answer number with the `<ANSWER>i</ANSWER>` tag.
+
+### Example quizzes
+
+#### Family relationships of distance 1
+
+```
+Given the family relationships:
+* Ralph is Anthony's parent.
+* Albert is Ralph's parent.
+What is Anthony's relationship to Ralph?
+Select the correct answer:
+1. Anthony is Ralph's child.
+2. Anthony is Ralph's parent.
+Enclose the selected answer number in the <ANSWER> tag, for example: <ANSWER>1</ANSWER>.
+```
+
+#### Family relationships of distance 2
+
+```
+Given the family relationships:
+* Wayne is Brittany's parent.
+* Billy is Madison's parent.
+* Madison is Wayne's parent.
+* Brittany is Amanda's parent.
+* Madison is Michael's parent.
+What is Amanda's relationship to Wayne?
+Select the correct answer:
+1. Amanda is Wayne's grandparent.
+2. Amanda is Wayne's sibling.
+3. Amanda is Wayne's grandchild.
+Enclose the selected answer number in the <ANSWER> tag, for example: <ANSWER>1</ANSWER>.
+```
+
+#### Family relationships of distance 3
+
+```
+Given the family relationships:
+* Brittany is Jeremy's parent.
+* Peter is Lauren's parent.
+* Peter is Madison's parent.
+* Brittany is Peter's parent.
+* Madison is Betty's parent.
+* Richard is Andrea's parent.
+* Lauren is Gabriel's parent.
+* Gabriel is Richard's parent.
+* Janet is Brittany's parent.
+What is Andrea's relationship to Lauren?
+Select the correct answer:
+1. Andrea is Lauren's niece or nephew.
+2. Andrea is Lauren's aunt or uncle.
+3. Andrea is Lauren's great grandchild.
+4. Andrea is Lauren's great grandparent.
+Enclose the selected answer number in the <ANSWER> tag, for example: <ANSWER>1</ANSWER>.
+```
+
+### Performance metrics
+
+We measure the performance of the LLM by macro-averaging the classification accuracy of all family relationships present in the dataset.
+So for example if a given LLM has the following accuracy values for family relationship quizzes of degrees up to 3:
+* child: 100.00
+* parent: 100.00
+* grandchild: 96.00
+* sibling: 22.00
+* grandparent: 72.00
+* great grandchild: 46.00
+* niece or nephew: 46.00
+* aunt or uncle: 18.00
+* great grandparent: 68.00
+
+then the overall macro-averaged accuracy is (100 + 100 + 96 + 22 + 72 + 46 + 46 + 18 + 68) / 9 = ~63.11
+To differentiate between benchmark results calculated for datasets with different maximum family relationship lengths, we propose to include the maximum family relationship length in the benchmark result label.
+So if an accuracy of 63.11 was computed for family relationships of length up to 3, the overall result would be labeled as FaRel-3 and would have a value of 63.11.
+
+## Usage
+
+There are three Python scripts in the FaRel benchmark.
+The first script farel_bench.py generates family relationship quizzes in a CSV format.
+The second script run_model.py generates answers for the quizzes by using llama.cpp and selected LLM.
+It also calculates the accuracy values for all family relationships.
+The third script compute_metrics.py analyzes log files in a given directory, calculates the macro-averaged accuracy value that is the FaRel benchmark result, and outputs a result table.
+
+### Example workflow
+
+Generating quizzes and storing model answers:
+```
+./farel_bench.py --shuffle -l 1 -n 50 -r 42|./run_model.py -b ~/projects/llama.cpp/main -m ~/projects/llama.cpp/models/llama-2-7b-chat.Q8_0.gguf|tee ./results/llama-2-7b-chat.Q8_0.log
+```
+
+Calculating FaRel benchmark metrics:
+```
+./compute_metrics.py ./results/
+```
+
+### Quiz generator farel_bench.py
+
+The farel_bench.py is the quiz generator script. It has the following options:
+```
+usage: farel_bench.py [-h] -l LENGTH [-p PROMPT] [-s] [-n NUMBER] [-r SEED]
+
+options:
+  -h, --help            show this help message and exit
+  -l LENGTH, --length LENGTH
+                        Maximum length of family relationship paths.
+  -p PROMPT, --prompt PROMPT
+                        Prompt template of the quiz. The default prompt template is: 'Given the family
+                        relationships:\n$QUIZ_RELATIONS\n$QUIZ_QUESTION\nSelect the correct
+                        answer:\n$QUIZ_ANSWERS\nEnclose the selected answer number in the <ANSWER> tag, for
+                        example: <ANSWER>1</ANSWER>.'
+  -s, --shuffle         Shuffle the order of parental relations and answer options in the quiz.
+  -n NUMBER, --number NUMBER
+                        Number of quizzes generated for each family relationship.
+  -r SEED, --seed SEED  Random seed value
+```
+
+### Model executor run_model.py
+
+The run_model.py script uses [llama.cpp](https://github.com/ggerganov/llama.cpp) to generate answers for family relationship quizzes generated by farel_bench.py for a selected LLM.
+
+```
+usage: run_model.py [-h] -b BINARY -m MODEL [-s [SYSTEM_PROMPT]]
+
+options:
+  -h, --help            show this help message and exit
+  -b BINARY, --binary BINARY
+                        Path to the llama.cpp executable binary.
+  -m MODEL, --model MODEL
+                        Path to the GGUF model file.
+  -s [SYSTEM_PROMPT], --system-prompt [SYSTEM_PROMPT]
+                        Use given system prompt. By default, the system prompt is not used. When this option is
+                        passed without a value, the default system prompt value is used: 'You are a master of
+                        logical thinking. You carefully analyze the premises step by step, take detailed notes and
+                        draw intermediate conclusions based on which you can find the final answer to any
+                        question.'
+```
+
+### Metrics calculator compute_metrics.py
+
+The compute_metrics.py script reads .log files from a given directory, calculates the FaRel benchmark metrics, and prints a result table in a markdown format.
