@@ -1,0 +1,75 @@
+#!/usr/bin/env -S python3 -u
+
+import re
+import os
+import csv
+import sys
+import codecs
+import argparse
+import subprocess
+from collections import defaultdict
+
+LLAMA_OPTIONS = ["--numa", "numactl", "-t", "32", "-s", "42", "--temp", "0.01"]
+DEFAULT_SYSTEM_PROMPT="You are a master of logical thinking. You carefully analyze the premises step by step, take detailed notes and draw intermediate conclusions based on which you can find the final answer to any question."
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-b", "--binary", help="Path to the llama.cpp executable binary.", required=True)
+parser.add_argument("-m", "--model", help="Path to the GGUF model file.", required=True)
+parser.add_argument("-s", "--system-prompt", help="Use given system prompt. By default, the system prompt is not used. When this option is passed without a value, the default system prompt value is used: " + repr(DEFAULT_SYSTEM_PROMPT), const=DEFAULT_SYSTEM_PROMPT, default=None, nargs='?')
+args = parser.parse_args()
+llama_bin = args.binary
+model_file = args.model
+system_prompt = args.system_prompt
+
+if system_prompt:
+    LLAMA_PROMPT_TEMPLATE="<s>[INST] <<SYS>>\n{SYS}\n<</SYS>>\n\n{USER}[/INST]\n"
+    CHATML_PROMPT_TEMPLATE="<|im_start|>system\n{SYS}<|im_end|>\n<|im_start|>user\n{USER}<|im_end|>\n<|im_start|>assistant"
+    COMMANDR_PROMPT_TEMPLATE="<BOS_TOKEN><|START_OF_TURN_TOKEN|><|SYSTEM_TOKEN|>{SYS}<|END_OF_TURN_TOKEN|><|START_OF_TURN_TOKEN|><|USER_TOKEN|>{USER}<|END_OF_TURN_TOKEN|><|START_OF_TURN_TOKEN|><|CHATBOT_TOKEN|>"
+else:
+    LLAMA_PROMPT_TEMPLATE="<s>[INST] {USER}[/INST]\n"
+    CHATML_PROMPT_TEMPLATE="<|im_start|>user\n{USER}<|im_end|>\n<|im_start|>assistant\n"
+    COMMANDR_PROMPT_TEMPLATE="<BOS_TOKEN><|START_OF_TURN_TOKEN|><|USER_TOKEN|>{USER}<|END_OF_TURN_TOKEN|><|START_OF_TURN_TOKEN|><|CHATBOT_TOKEN|>"
+
+model_file_basename = os.path.basename(model_file)
+
+if any(model_name in model_file_basename.lower() for model_name in ["llama", "gemma", "mistral", "mixtral", "miqu"]):
+    prompt_template = LLAMA_PROMPT_TEMPLATE
+elif any(model_name in model_file_basename.lower() for model_name in ["qwen", "yi", "dbrx-instruct", "theprofessor"]):
+    prompt_template = CHATML_PROMPT_TEMPLATE
+elif any(model_name in model_file_basename.lower() for model_name in ["command-r"]):
+    prompt_template = COMMANDR_PROMPT_TEMPLATE
+else:
+    raise RuntimeError("Could not detect model prompt template!")
+
+quiz_reader = csv.reader(sys.stdin, delimiter=',', quotechar='"')
+
+correct_answers = defaultdict(lambda: 0)
+incorrect_answers = defaultdict(lambda: 0)
+missing_answers = defaultdict(lambda: 0)
+all_answers = defaultdict(lambda: 0)
+
+for distance, relation_name, correct_answer, quiz in quiz_reader:
+    quiz = codecs.escape_decode(bytes(quiz, "utf-8"))[0].decode("utf-8")
+    prompt=prompt_template.format(SYS=system_prompt, USER=quiz)
+    command = [llama_bin] + LLAMA_OPTIONS + ["-m", model_file, "-e", "--no-display-prompt", "-p", prompt]
+    print(" ".join(command))
+    result = subprocess.run(command, capture_output=True, text=True)
+    print(result.stdout)
+
+    all_answers[relation_name] += 1
+    matches = re.findall(r'<ANSWER>(.*?)</ANSWER>', result.stdout)
+    if matches:
+        if correct_answer == matches[0].strip():
+            correct_answers[relation_name] += 1
+        else:
+            incorrect_answers[relation_name] += 1
+    else:
+        missing_answers[relation_name] += 1
+
+for relation_name in all_answers.keys():
+    num_correct = correct_answers[relation_name]
+    num_incorrect = incorrect_answers[relation_name]
+    num_missing = missing_answers[relation_name]
+    num_all = all_answers[relation_name]
+    percent_correct = 100 * num_correct / num_all
+    print(f"{relation_name}: {percent_correct:.2f} (C: {num_correct}, I: {num_incorrect}, M: {num_missing} A: {num_all})")
