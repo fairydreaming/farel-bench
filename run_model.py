@@ -9,17 +9,19 @@ import argparse
 import subprocess
 from collections import defaultdict
 
-LLAMA_OPTIONS = ["--numa", "numactl", "-t", "32", "-s", "42", "--temp", "0.01"]
+LLAMA_OPTIONS = ["--numa", "distribute", "-t", "32", "-s", "42", "-c", "1024", "--temp", "0.01"]
 DEFAULT_SYSTEM_PROMPT="You are a master of logical thinking. You carefully analyze the premises step by step, take detailed notes and draw intermediate conclusions based on which you can find the final answer to any question."
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-b", "--binary", help="Path to the llama.cpp executable binary.", required=True)
+parser.add_argument("-t", "--timeout", help = "llama.cpp execution timeout (seconds)", default=600, type=int)
 parser.add_argument("-m", "--model", help="Path to the GGUF model file.", required=True)
 parser.add_argument("-s", "--system-prompt", help="Use given system prompt. By default, the system prompt is not used. When this option is passed without a value, the default system prompt value is used: " + repr(DEFAULT_SYSTEM_PROMPT), const=DEFAULT_SYSTEM_PROMPT, default=None, nargs='?')
 args = parser.parse_args()
 llama_bin = args.binary
 model_file = args.model
 system_prompt = args.system_prompt
+execution_timeout = args.timeout
 
 if system_prompt:
     LLAMA_PROMPT_TEMPLATE="<s>[INST] <<SYS>>\n{SYS}\n<</SYS>>\n\n{USER}[/INST]\n"
@@ -32,7 +34,7 @@ else:
 
 model_file_basename = os.path.basename(model_file)
 
-if any(model_name in model_file_basename.lower() for model_name in ["llama", "gemma", "mistral", "mixtral", "miqu"]):
+if any(model_name in model_file_basename.lower() for model_name in ["llama", "gemma", "mistral", "mixtral", "miqu", "wizardlm"]):
     prompt_template = LLAMA_PROMPT_TEMPLATE
 elif any(model_name in model_file_basename.lower() for model_name in ["qwen", "yi", "dbrx-instruct", "theprofessor"]):
     prompt_template = CHATML_PROMPT_TEMPLATE
@@ -53,11 +55,18 @@ for distance, relation_name, correct_answer, quiz in quiz_reader:
     prompt=prompt_template.format(SYS=system_prompt, USER=quiz)
     command = [llama_bin] + LLAMA_OPTIONS + ["-m", model_file, "-e", "--no-display-prompt", "-p", prompt]
     print(" ".join(command))
-    result = subprocess.run(command, capture_output=True, text=True)
-    print(result.stdout)
+
+    try:
+        result = subprocess.run(command, capture_output=True, text=True, timeout=execution_timeout)
+        model_output = result.stdout
+    except subprocess.TimeoutExpired as e:
+        print(f"Execution timeout of {execution_timeout}s expired.")
+        model_output = e.stdout.decode("utf-8")
+
+    print(model_output)
 
     all_answers[relation_name] += 1
-    matches = re.findall(r'<ANSWER>(.*?)</ANSWER>', result.stdout)
+    matches = re.findall(r'<ANSWER>(.*?)</ANSWER>', model_output)
     if matches:
         if correct_answer == matches[0].strip():
             correct_answers[relation_name] += 1
