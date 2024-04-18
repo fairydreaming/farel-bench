@@ -4,6 +4,7 @@ import os
 import re
 import sys
 import pandas as pd
+import argparse
 
 def extract_accuracy_values(file_path):
     with open(file_path, 'r') as file:
@@ -36,7 +37,11 @@ def process_logs(directory):
     
     return df
 
-directory = sys.argv[1]
+parser = argparse.ArgumentParser()
+parser.add_argument("dir", help="Directory containing farel-bench log files.")
+args = parser.parse_args()
+
+directory = args.dir
 result_df = process_logs(directory)
 print(result_df.reset_index(names=['Model']).to_markdown(floatfmt=".2f"))
 
