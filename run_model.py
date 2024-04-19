@@ -25,18 +25,22 @@ execution_timeout = args.timeout
 
 if system_prompt:
     LLAMA_PROMPT_TEMPLATE="<s>[INST] <<SYS>>\n{SYS}\n<</SYS>>\n\n{USER}[/INST]\n"
+    LLAMA3_PROMPT_TEMPLATE="<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n{SYS}<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n{USER}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
     CHATML_PROMPT_TEMPLATE="<|im_start|>system\n{SYS}<|im_end|>\n<|im_start|>user\n{USER}<|im_end|>\n<|im_start|>assistant"
     COMMANDR_PROMPT_TEMPLATE="<BOS_TOKEN><|START_OF_TURN_TOKEN|><|SYSTEM_TOKEN|>{SYS}<|END_OF_TURN_TOKEN|><|START_OF_TURN_TOKEN|><|USER_TOKEN|>{USER}<|END_OF_TURN_TOKEN|><|START_OF_TURN_TOKEN|><|CHATBOT_TOKEN|>"
     VICUNA_PROMPT_TEMPLATE="{SYS}\nUSER: {USER}\nASSISTANT:"
 else:
     LLAMA_PROMPT_TEMPLATE="<s>[INST] {USER}[/INST]\n"
+    LLAMA3_PROMPT_TEMPLATE="<|begin_of_text|><|start_header_id|>user<|end_header_id|>\n\n{USER}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
     CHATML_PROMPT_TEMPLATE="<|im_start|>user\n{USER}<|im_end|>\n<|im_start|>assistant\n"
     COMMANDR_PROMPT_TEMPLATE="<BOS_TOKEN><|START_OF_TURN_TOKEN|><|USER_TOKEN|>{USER}<|END_OF_TURN_TOKEN|><|START_OF_TURN_TOKEN|><|CHATBOT_TOKEN|>"
     VICUNA_PROMPT_TEMPLATE="USER: {USER}\nASSISTANT: "
 
 model_file_basename = os.path.basename(model_file)
 
-if any(model_name in model_file_basename.lower() for model_name in ["llama", "gemma", "mistral", "mixtral", "miqu"]):
+if any(model_name in model_file_basename.lower() for model_name in ["llama-3"]):
+    prompt_template = LLAMA3_PROMPT_TEMPLATE
+elif any(model_name in model_file_basename.lower() for model_name in ["llama", "gemma", "mistral", "mixtral", "miqu"]):
     prompt_template = LLAMA_PROMPT_TEMPLATE
 elif any(model_name in model_file_basename.lower() for model_name in ["qwen", "yi", "dbrx-instruct", "theprofessor"]):
     prompt_template = CHATML_PROMPT_TEMPLATE
