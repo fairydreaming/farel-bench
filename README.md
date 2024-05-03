@@ -8,7 +8,7 @@ The benchmark result is the macro-averaged accuracy value over all the family re
 
 ### Closed-weights models
 
-|    | Model             |   FaRel-3 |   child |   parent |   grandchild |   sibling |   grandparent |   great grandchild |   niece or nephew |   aunt or uncle |   great grandparent |
+|    | Model             |   FaRel-3 |   child |   parent |   grand child |   sibling |   grand parent |   great grand child |   niece or nephew |   aunt or uncle |   great grand parent |
 |---:|:------------------|--------:|--------:|---------:|-------------:|----------:|--------------:|-------------------:|------------------:|----------------:|--------------------:|
 |  0 | gpt-4-turbo-sys   |   86.67 |  100.00 |   100.00 |        94.00 |     80.00 |         94.00 |              94.00 |             54.00 |           68.00 |               96.00 |
 |  1 | gpt-4-turbo       |   86.22 |  100.00 |   100.00 |        92.00 |     84.00 |         96.00 |              90.00 |             56.00 |           60.00 |               98.00 |
@@ -21,7 +21,7 @@ Note: Models with -sys suffix had system prompt set to 'You are a master of logi
 
 ### Open-weights models
 
-|    | Model                                |   FaRel-3 |   child |   parent |   grandchild |   sibling |   grandparent |   great grandchild |   niece or nephew |   aunt or uncle |   great grandparent |
+|    | Model                                |   FaRel-3 |   child |   parent |   grand child |   sibling |   grand parent |   great grand child |   niece or nephew |   aunt or uncle |   great grand parent |
 |---:|:-------------------------------------|--------:|--------:|---------:|-------------:|----------:|--------------:|-------------------:|------------------:|----------------:|--------------------:|
 |  0 | mixtral-8x22b-instruct-v0.1-Q8_0     |   65.11 |  100.00 |   100.00 |       100.00 |     22.00 |         92.00 |              50.00 |             24.00 |           16.00 |               82.00 |
 |  1 | Meta-Llama-3-70B-Instruct.Q8_0       |   64.67 |  100.00 |   100.00 |        96.00 |     34.00 |         90.00 |              44.00 |             48.00 |           16.00 |               54.00 |
