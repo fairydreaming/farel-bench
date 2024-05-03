@@ -44,7 +44,7 @@ if any(model_name in model_file_basename.lower() for model_name in ["llama-3"]):
     prompt_template = LLAMA3_PROMPT_TEMPLATE
 elif any(model_name in model_file_basename.lower() for model_name in ["llama", "gemma", "mistral", "mixtral", "miqu"]):
     prompt_template = LLAMA_PROMPT_TEMPLATE
-elif any(model_name in model_file_basename.lower() for model_name in ["qwen", "yi", "dbrx-instruct", "theprofessor"]):
+elif any(model_name in model_file_basename.lower() for model_name in ["qwen", "yi", "dbrx-instruct", "theprofessor", "smaug", "arctic"]):
     prompt_template = CHATML_PROMPT_TEMPLATE
 elif any(model_name in model_file_basename.lower() for model_name in ["command-r"]):
     prompt_template = COMMANDR_PROMPT_TEMPLATE
