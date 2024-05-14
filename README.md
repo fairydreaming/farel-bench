@@ -8,14 +8,16 @@ The benchmark result is the macro-averaged accuracy value over all the family re
 
 ### Closed-weights models
 
-|    | Model             |   FaRel-3 |   child |   parent |   grand child |   sibling |   grand parent |   great grand child |   niece or nephew |   aunt or uncle |   great grand parent |
+|    | Model             | FaRel-3 |   child |   parent |  grand child |   sibling |  grand parent |  great grand child |   niece or nephew |   aunt or uncle |  great grand parent |
 |---:|:------------------|--------:|--------:|---------:|-------------:|----------:|--------------:|-------------------:|------------------:|----------------:|--------------------:|
-|  0 | gpt-4-turbo-sys   |   86.67 |  100.00 |   100.00 |        94.00 |     80.00 |         94.00 |              94.00 |             54.00 |           68.00 |               96.00 |
-|  1 | gpt-4-turbo       |   86.22 |  100.00 |   100.00 |        92.00 |     84.00 |         96.00 |              90.00 |             56.00 |           60.00 |               98.00 |
-|  2 | gpt-4-sys         |   74.44 |  100.00 |   100.00 |        90.00 |     66.00 |         96.00 |              60.00 |             46.00 |           46.00 |               66.00 |
-|  3 | gpt-4             |   65.78 |  100.00 |   100.00 |        98.00 |     28.00 |         86.00 |              76.00 |             12.00 |           14.00 |               78.00 |
-|  4 | gpt-3.5-turbo-sys |   60.89 |  100.00 |    78.00 |        76.00 |     32.00 |         90.00 |              56.00 |             18.00 |           18.00 |               80.00 |
-|  5 | gpt-3.5-turbo     |   50.22 |   96.00 |    54.00 |        78.00 |     18.00 |         80.00 |              22.00 |             52.00 |           18.00 |               34.00 |
+|  0 | gpt-4o-sys        |   88.44 |  100.00 |   100.00 |        86.00 |     92.00 |        100.00 |              88.00 |             72.00 |           62.00 |               96.00 |
+|  1 | gpt-4-turbo-sys   |   86.67 |  100.00 |   100.00 |        94.00 |     80.00 |         94.00 |              94.00 |             54.00 |           68.00 |               96.00 |
+|  2 | gpt-4-turbo       |   86.22 |  100.00 |   100.00 |        92.00 |     84.00 |         96.00 |              90.00 |             56.00 |           60.00 |               98.00 |
+|  3 | gpt-4o            |   83.11 |  100.00 |   100.00 |        84.00 |     82.00 |         98.00 |              74.00 |             62.00 |           52.00 |               96.00 |
+|  4 | gpt-4-sys         |   74.44 |  100.00 |   100.00 |        90.00 |     66.00 |         96.00 |              60.00 |             46.00 |           46.00 |               66.00 |
+|  5 | gpt-4             |   65.78 |  100.00 |   100.00 |        98.00 |     28.00 |         86.00 |              76.00 |             12.00 |           14.00 |               78.00 |
+|  6 | gpt-3.5-turbo-sys |   60.89 |  100.00 |    78.00 |        76.00 |     32.00 |         90.00 |              56.00 |             18.00 |           18.00 |               80.00 |
+|  7 | gpt-3.5-turbo     |   50.22 |   96.00 |    54.00 |        78.00 |     18.00 |         80.00 |              22.00 |             52.00 |           18.00 |               34.00 |
 
 Note: Models with -sys suffix had system prompt set to 'You are a master of logical thinking. You carefully analyze the premises step by step, take detailed notes and draw intermediate conclusions based on which you can find the final answer to any question.'.
 
