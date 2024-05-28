@@ -6,7 +6,6 @@ Select the correct answer:
 1. Anthony is Ralph's child.
 2. Anthony is Ralph's parent.
 Enclose the selected answer number in the <ANSWER> tag, for example: <ANSWER>1</ANSWER>.<|END_OF_TURN_TOKEN|><|START_OF_TURN_TOKEN|><|CHATBOT_TOKEN|>
-Relations of length: 2 (['grandchild', 'sibling', 'grandparent'])
 <ANSWER>1</ANSWER><|END_OF_TURN_TOKEN|>
 /home/phm/projects/llama.cpp/main --numa distribute -t 32 -s 42 -c 1024 --temp 0.01 -m /mnt/md0/models/aya-23-35b-Q8_0.gguf -e --no-display-prompt -p <BOS_TOKEN><|START_OF_TURN_TOKEN|><|USER_TOKEN|>Given the family relationships:
 * Jessica is John's parent.
@@ -682,7 +681,6 @@ Select the correct answer:
 1. Stephanie is Stephen's child.
 2. Stephanie is Stephen's parent.
 Enclose the selected answer number in the <ANSWER> tag, for example: <ANSWER>1</ANSWER>.<|END_OF_TURN_TOKEN|><|START_OF_TURN_TOKEN|><|CHATBOT_TOKEN|>
-Relations of length: 3 (['great grandchild', 'niece or nephew', 'aunt or uncle', 'great grandparent'])
 <ANSWER>2</ANSWER><|END_OF_TURN_TOKEN|>
 /home/phm/projects/llama.cpp/main --numa distribute -t 32 -s 42 -c 1024 --temp 0.01 -m /mnt/md0/models/aya-23-35b-Q8_0.gguf -e --no-display-prompt -p <BOS_TOKEN><|START_OF_TURN_TOKEN|><|USER_TOKEN|>Given the family relationships:
 * Margaret is Ashley's parent.
