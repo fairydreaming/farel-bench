@@ -27,7 +27,7 @@ Note: Models with -sys suffix had system prompt set to 'You are a master of logi
 |---:|:-------------------------------------|--------:|--------:|---------:|-------------:|----------:|--------------:|-------------------:|------------------:|----------------:|--------------------:|
 |  0 | nemotron-4-340b-Q8_0                 |   78.67 |  100.00 |   100.00 |        76.00 |     60.00 |         96.00 |              76.00 |             46.00 |           58.00 |               96.00 |
 |  1 | Meta-Llama-3-70B-Instruct.Q8_0-sys   |   75.11 |  100.00 |   100.00 |        78.00 |     68.00 |        100.00 |              74.00 |             34.00 |           26.00 |               96.00 |
-|  2 | gemma-2-9b-Q8_0                      |   67.33 |  100.00 |   100.00 |        82.00 |     42.00 |         92.00 |              64.00 |             20.00 |           16.00 |               90.00 |
+|  2 | gemma-2-9b-Q8_0[^1]                  |   67.33 |  100.00 |   100.00 |        82.00 |     42.00 |         92.00 |              64.00 |             20.00 |           16.00 |               90.00 |
 |  3 | mixtral-8x22b-instruct-v0.1-Q8_0     |   65.11 |  100.00 |   100.00 |       100.00 |     22.00 |         92.00 |              50.00 |             24.00 |           16.00 |               82.00 |
 |  3 | Qwen2-72B-Instruct-Q8_0              |   65.11 |  100.00 |   100.00 |        86.00 |     44.00 |         88.00 |              68.00 |             22.00 |           16.00 |               62.00 |
 |  4 | mixtral-8x22b-instruct-v0.1.Q8_0-sys |   64.89 |  100.00 |   100.00 |       100.00 |     22.00 |         94.00 |              44.00 |             30.00 |           16.00 |               78.00 |
@@ -70,6 +70,8 @@ Note: Models with -sys suffix had system prompt set to 'You are a master of logi
 | 36 | qwen1_5-7b-chat-q8_0                 |    2.89 |    6.00 |     2.00 |         4.00 |      0.00 |          2.00 |               0.00 |              8.00 |            2.00 |                2.00 |
 
 Very low benchmark results for gemma-2b, qwen1_5-7b, and WizardLM-2-7B are caused by the inability of the models to mark the selected answer option as specified in the prompt.
+
+[^1]: Courtesy of Reddit user Healthy-Nebula-3603
 
 ## Description
 The purpose of this project is to test LLM reasoning abilities with family relationship quizzes.
