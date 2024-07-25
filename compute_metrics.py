@@ -23,15 +23,14 @@ def extract_accuracy_values(file_path):
     return { key: accuracy_values[key] for key in reversed(list(accuracy_values.keys())) }
 
 def process_logs(directory):
-    log_files = [file for file in os.listdir(directory) if file.endswith('.log')]
+    log_files = [os.path.join(root, file) for root, _, files in os.walk(directory) for file in files if file.endswith('.log')]
     data = []
-    for file in log_files:
-        file_path = os.path.join(directory, file)
+    for file_path in log_files:
         accuracy_values = extract_accuracy_values(file_path)
         print(accuracy_values)
         data.append(accuracy_values)
     
-    df = pd.DataFrame(data, index=[log_file.replace(".log", "") for log_file in log_files])
+    df = pd.DataFrame(data, index=[os.path.basename(log_file).replace(".log", "") for log_file in log_files])
     df.insert(loc = 0, column= 'FaRel', value = df.mean(axis=1))
     df = df.sort_values(['FaRel'], ascending=False)
     
