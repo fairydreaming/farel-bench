@@ -27,12 +27,13 @@ def process_logs(directory):
     data = []
     for file_path in log_files:
         accuracy_values = extract_accuracy_values(file_path)
-        print(accuracy_values)
         data.append(accuracy_values)
     
     df = pd.DataFrame(data, index=[os.path.basename(log_file).replace(".log", "") for log_file in log_files])
-    df.insert(loc = 0, column= 'FaRel', value = df.mean(axis=1))
+    df.insert(loc = 0, column = 'FaRel', value = df.mean(axis=1).round(2))
     df = df.sort_values(['FaRel'], ascending=False)
+    df = df.reset_index(names='Model')
+    df.insert(loc = 0, column = 'Nr', value = df['FaRel'].rank(method='min', ascending=False).astype('int32'))
     
     return df
 
@@ -42,5 +43,6 @@ args = parser.parse_args()
 
 directory = args.dir
 result_df = process_logs(directory)
-print(result_df.reset_index(names=['Model']).to_markdown(floatfmt=".2f"))
+result_df.columns = map(lambda c: c.replace("grand", "grand-"), result_df.columns)
+print(result_df.to_markdown(floatfmt=".2f", index=False))
 
