@@ -82,8 +82,8 @@ for distance, relation_name, correct_answer, quiz in quiz_reader:
     print(" ".join(command))
 
     try:
-        result = subprocess.run(command, capture_output=True, text=True, timeout=execution_timeout)
-        model_output = result.stdout
+        result = subprocess.run(command, capture_output=True, text=False, timeout=execution_timeout)
+        model_output = result.stdout.decode('utf-8')
     except subprocess.TimeoutExpired as e:
         print(f"Execution timeout of {execution_timeout}s expired.")
         model_output = e.stdout.decode("utf-8")
