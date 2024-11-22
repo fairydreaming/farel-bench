@@ -33,6 +33,7 @@ if system_prompt:
     DEEPSEEK2_PROMPT_TEMPLATE="{SYS}\n\nUser: {USER}\n\nAssistant:"
     NEMOTRON4_PROMPT_TEMPLATE="<extra_id_0>System\n{SYS}\n<extra_id_1>User\n{USER}\n<extra_id_1>Assistant\n"
     DEEPSEEK2_0628_PROMPT_TEMPLATE="<｜begin▁of▁sentence｜>{SYS}\n\n<｜User｜>{USER}<｜Assistant｜>"
+    TULU3_PROMPT_TEMPLATE="<|system|>\n{SYS}\n<|user|>\n{USER}\n<|assistant|>\n"
 else:
     LLAMA_PROMPT_TEMPLATE="<s>[INST] {USER}[/INST]\n"
     LLAMA3_PROMPT_TEMPLATE="<|begin_of_text|><|start_header_id|>user<|end_header_id|>\n\n{USER}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
@@ -43,6 +44,7 @@ else:
     DEEPSEEK2_PROMPT_TEMPLATE="User: {USER}\n\nAssistant:"
     NEMOTRON4_PROMPT_TEMPLATE="<extra_id_0>System\n\n<extra_id_1>User\n{USER}<extra_id_1>Assistant\n"
     DEEPSEEK2_0628_PROMPT_TEMPLATE="<｜begin▁of▁sentence｜><｜User｜>{USER}<｜Assistant｜>"
+    TULU3_PROMPT_TEMPLATE="<|user|>\n{USER}\n<|assistant|>\n"
 
 model_file_basename = os.path.basename(model_file)
 
@@ -65,6 +67,8 @@ elif any(model_name in model_file_basename.lower() for model_name in ["deepseek-
         prompt_template = DEEPSEEK2_PROMPT_TEMPLATE
 elif any(model_name in model_file_basename.lower() for model_name in ["nemotron"]):
     prompt_template = NEMOTRON4_PROMPT_TEMPLATE
+elif any(model_name in model_file_basename.lower() for model_name in ["tulu-3"]):
+    prompt_template = TULU3_PROMPT_TEMPLATE
 else:
     raise RuntimeError("Could not detect model prompt template!")
 
