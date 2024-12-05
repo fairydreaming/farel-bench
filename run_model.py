@@ -9,7 +9,7 @@ import argparse
 import subprocess
 from collections import defaultdict
 
-LLAMA_OPTIONS = ["--numa", "distribute", "-t", "32", "-s", "42", "-c", "1024", "--temp", "0.01"]
+LLAMA_OPTIONS = ["--numa", "distribute", "-t", "32", "-s", "42", "-c", "2048", "--temp", "0.01"]
 DEFAULT_SYSTEM_PROMPT="You are a master of logical thinking. You carefully analyze the premises step by step, take detailed notes and draw intermediate conclusions based on which you can find the final answer to any question."
 
 parser = argparse.ArgumentParser()
@@ -52,7 +52,7 @@ if any(model_name in model_file_basename.lower() for model_name in ["llama-3"]):
     prompt_template = LLAMA3_PROMPT_TEMPLATE
 elif any(model_name in model_file_basename.lower() for model_name in ["llama", "gemma", "mistral", "mixtral", "miqu"]):
     prompt_template = LLAMA_PROMPT_TEMPLATE
-elif any(model_name in model_file_basename.lower() for model_name in ["qwen", "yi", "dbrx-instruct", "theprofessor", "smaug", "arctic", "internlm"]):
+elif any(model_name in model_file_basename.lower() for model_name in ["qwen", "yi", "dbrx-instruct", "theprofessor", "smaug", "arctic", "internlm", "qwq", "athene-v2"]):
     prompt_template = CHATML_PROMPT_TEMPLATE
 elif any(model_name in model_file_basename.lower() for model_name in ["command-r", "aya-23"]):
     prompt_template = COMMANDR_PROMPT_TEMPLATE
