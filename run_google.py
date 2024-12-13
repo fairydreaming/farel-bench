@@ -13,7 +13,7 @@ import google.generativeai as genai
 DEFAULT_SYSTEM_PROMPT="You are a master of logical thinking. You carefully analyze the premises step by step, take detailed notes and draw intermediate conclusions based on which you can find the final answer to any question."
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-m", "--model", help="OpenRouter model name.", required=True)
+parser.add_argument("-m", "--model", help="Model name.", required=True)
 parser.add_argument("-s", "--system-prompt", help="Use given system prompt. By default, the system prompt is not used. When this option is passed without a value, the default system prompt value is used: " + repr(DEFAULT_SYSTEM_PROMPT), const=DEFAULT_SYSTEM_PROMPT, default=None, nargs='?')
 args = parser.parse_args()
 model_name = args.model
