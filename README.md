@@ -3,7 +3,7 @@ This project is a family relationship (FaRel) benchmark for testing LLM reasonin
 
 ## Results
 
-The table below presents the FaRel-3 (family relationships of degree up to 3) benchmark results for selected large language models.
+The table below presents 20 best FaRel-3 (family relationships of degree up to 3) benchmark results.
 The benchmark result is the macro-averaged accuracy value over all the family relationship classes.
 
 |   Nr | Model                                |   FaRel |   child |   parent |   grand-child |   sibling |   grand-parent |   great grand-child |   niece or nephew |   aunt or uncle |   great grand-parent |
