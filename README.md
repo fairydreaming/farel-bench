@@ -27,7 +27,7 @@ The benchmark result is the macro-averaged accuracy value over all the family re
 |   17 | minimax-01                       |   85.56 |  100.00 |   100.00 |         96.00 |     82.00 |         100.00 |               72.00 |             52.00 |           68.00 |               100.00 |
 |   18 | gpt-4o-2024-11-20                |   84.22 |  100.00 |   100.00 |         84.00 |     78.00 |          98.00 |               82.00 |             62.00 |           56.00 |                98.00 |
 |   19 | gemini-2.0-flash-exp             |   84.00 |  100.00 |   100.00 |         84.00 |     78.00 |          94.00 |               86.00 |             66.00 |           50.00 |                98.00 |
-|   20 | gpt-4o                           |   83.11 |  100.00 |   100.00 |         84.00 |     82.00 |          98.00 |
+|   20 | gpt-4o                           |   83.11 |  100.00 |   100.00 |         84.00 |     82.00 |          98.00 |               74.00 |             62.00 |           52.00 |                96.00 |
 
 To see results for all models benchmarked so far check the [results.md](results.md) file.
 
