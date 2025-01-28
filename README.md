@@ -1,6 +1,8 @@
 # farel-bench
 This project is a family relationship (FaRel) benchmark for testing LLM reasoning abilities with family relationship quizzes.
 
+Note: this benchmark suffers from saturation that made it obsolete. If you are interested in logical reasoning performance of LLM models then check out its successor, lineage-bench: https://github.com/fairydreaming/lineage-bench
+
 ## Results
 
 The table below presents 20 best FaRel-3 (family relationships of degree up to 3) benchmark results.
